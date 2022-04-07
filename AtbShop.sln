@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtbShop", "AtbShop\AtbShop.csproj", "{519B7F77-42C0-4113-BA45-342EFEA1CE72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{D29B81E0-5275-47C9-926B-399A2A120F16}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{519B7F77-42C0-4113-BA45-342EFEA1CE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519B7F77-42C0-4113-BA45-342EFEA1CE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519B7F77-42C0-4113-BA45-342EFEA1CE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519B7F77-42C0-4113-BA45-342EFEA1CE72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D29B81E0-5275-47C9-926B-399A2A120F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D29B81E0-5275-47C9-926B-399A2A120F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D29B81E0-5275-47C9-926B-399A2A120F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D29B81E0-5275-47C9-926B-399A2A120F16}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1563AE23-7025-4359-A8C2-9A15153F7944}
+	EndGlobalSection
+EndGlobal
