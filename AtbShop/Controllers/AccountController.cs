@@ -34,7 +34,7 @@ namespace AtbShop.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             var img = ImageWorker.FromBase64StringToImage(model.Photo);
-            string randomFilename = Path.GetRandomFileName() + ".jpeg";
+            string randomFilename = Path.GetRandomFileName() + ".jpg";
             var dir = Path.Combine(Directory.GetCurrentDirectory(), "uploads", randomFilename);
             img.Save(dir, ImageFormat.Jpeg);
             var user = _mapper.Map<AppUser>(model);

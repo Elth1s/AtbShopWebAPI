@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Validation
-builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Program>());
+//builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Program>());
 
 // Swagger
 builder.Services.AddSwaggerGen(c =>
