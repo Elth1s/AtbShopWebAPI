@@ -4,6 +4,7 @@ using AtbShop.Services;
 using AutoMapper;
 using DAL.Data;
 using DAL.Entities.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,29 @@ namespace AtbShop.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if(user != null)
+                {
+                    if(await _userManager.CheckPasswordAsync(user, model.Password))
+                    {
+                        return Ok(new { token = await _jwtTokenService.CreateTokenAsync(user)});
+                    }
+                }
+                return BadRequest("User not found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Server error");
+            }
+        }
+
+
+        [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
@@ -45,17 +69,20 @@ namespace AtbShop.Controllers
                 return BadRequest(new { errors = result.Errors });
 
 
-            return Ok(new { token = _jwtTokenService.CreateTokenAsync(user).Result });
+            return Ok(new { token = await _jwtTokenService.CreateTokenAsync(user) });
         }
 
         [HttpGet]
+        [Authorize]
         [Route("users")]
         public async Task<IActionResult> Users()
         {
             var list = _context.Users.Select(x => _mapper.Map<UserItemViewModel>(x)).ToList();
-
+            Thread.Sleep(2000);
             return Ok(list);
         }
+
+
 
 
     }

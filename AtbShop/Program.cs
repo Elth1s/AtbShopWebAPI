@@ -107,6 +107,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 });
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
