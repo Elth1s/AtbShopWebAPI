@@ -5,7 +5,6 @@ using AutoMapper;
 using DAL.Data;
 using DAL.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Imaging;
@@ -30,6 +29,12 @@ namespace AtbShop.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Авторизація на сайті
+        /// </summary>
+        /// <param name="model">Логін та пароль користувача</param>
+        /// <returns>Повертає токен авторизації</returns>
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -37,11 +42,11 @@ namespace AtbShop.Controllers
             try
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                if(user != null)
+                if (user != null)
                 {
-                    if(await _userManager.CheckPasswordAsync(user, model.Password))
+                    if (await _userManager.CheckPasswordAsync(user, model.Password))
                     {
-                        return Ok(new { token = await _jwtTokenService.CreateTokenAsync(user)});
+                        return Ok(new { token = await _jwtTokenService.CreateTokenAsync(user) });
                     }
                 }
                 return BadRequest("User not found");
@@ -77,9 +82,22 @@ namespace AtbShop.Controllers
         [Route("users")]
         public async Task<IActionResult> Users()
         {
+            throw new AppException("Email or password is incorrect");
             var list = _context.Users.Select(x => _mapper.Map<UserItemViewModel>(x)).ToList();
             Thread.Sleep(2000);
             return Ok(list);
+        }
+
+        [HttpGet]
+        [Route("get-user/${id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<UserItemViewModel>(user));
         }
 
 

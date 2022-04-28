@@ -1,8 +1,8 @@
-using AtbShop.Mapper;
+using AtbShop.Helpers;
+using AtbShop.Middleware;
 using AtbShop.Services;
 using DAL.Data;
 using DAL.Entities.Identity;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +29,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 }).AddEntityFrameworkStores<AppEFContext>().AddDefaultTokenProviders();
 
 // Mapper
-builder.Services.AddAutoMapper(typeof(AppMapProfile));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Authentication
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -37,6 +38,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 });
+
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddEndpointsApiExplorer();
 var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<String>("JwtKey")));
@@ -64,9 +66,10 @@ builder.Services.AddAuthentication(options =>
 //builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Program>());
 
 // Swagger
+var assamblyName = Assembly.GetExecutingAssembly().GetName().Name;
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AtbShop", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = assamblyName, Version = "v1" });
     c.AddSecurityDefinition("Bearer",
         new OpenApiSecurityScheme
         {
@@ -84,9 +87,16 @@ builder.Services.AddSwaggerGen(c =>
                         },new List<string>()
                     }
                 });
+    var fileDoc = Path.Combine(System.AppContext.BaseDirectory, $"{assamblyName}.xml");
+    c.IncludeXmlComments(fileDoc);
 });
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -111,5 +121,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseLoggerFile();
+
+app.SeedData();
 
 app.Run();

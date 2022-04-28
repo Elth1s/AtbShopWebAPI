@@ -13,7 +13,15 @@
 
     public class LoginViewModel
     {
+        /// <summary>
+        /// Email користувача
+        /// </summary>
+        /// <example>dg646726@gmail.com</example>
         public string Email { get; set; }
+        /// <summary>
+        /// Пароль користувача
+        /// </summary>
+        /// <example>12345</example>
         public string Password { get; set; }
     }
 }
